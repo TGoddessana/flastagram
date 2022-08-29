@@ -1,0 +1,12 @@
+instance/*
+!instance/.gitignore
+.webassets-cache
+.env
+.env.example
+migrations
+__pycache__/
+*.py[cod]
+*$py.class
+venv
+.db
+frontend/assets/img

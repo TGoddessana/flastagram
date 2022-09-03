@@ -19,9 +19,8 @@ class CommentModel(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     author_id = db.Column(db.Integer, db.ForeignKey('User.id', ondelete='CASCADE'), nullable=False)
-    author = db.relationship("UserModel", backref="author")
+    author = db.relationship("UserModel", backref="comment_author")
     post_id = db.Column(db.Integer, db.ForeignKey('Post.id', ondelete='CASCADE'), nullable=False)
-    post = db.relationship("UserModel", backref="post")
     
     def save_to_db(self):
         """

@@ -27,7 +27,7 @@ class UserModel(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     followed = db.relationship(                             # 본인이 팔로우한 유저들
-        'User',                                             # User 모델 스스로를 참조
+        'UserModel',                                        # User 모델 스스로를 참조
         secondary=followers,                                # 연관 테이블 이름을 지정
         primaryjoin=(followers.c.follower_id==id),          # followers 테이블에서 특정 유저를 팔로우하는 유저들을 찾음
         secondaryjoin=(followers.c.followed_id==id),        # followers 테이블에서 특정 유저가 팔로우한 모든 유저들을 찾음

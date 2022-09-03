@@ -21,8 +21,8 @@ class PostModel(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     author_id = db.Column(db.Integer, db.ForeignKey('User.id', ondelete='CASCADE'), nullable=False)
-    author = db.relationship("UserModel", backref="author")
-    comment_set = db.relationship("Comment.id", backref="post", passive_deletes=True)
+    author = db.relationship("UserModel", backref="post_author")
+    comment_set = db.relationship("CommentModel", backref="post", passive_deletes=True)
     
     @classmethod
     def find_by_id(cls, id):

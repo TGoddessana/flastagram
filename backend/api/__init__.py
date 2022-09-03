@@ -11,7 +11,7 @@ from marshmallow import ValidationError
 # 추가!
 from .db import db
 from .ma import ma
-from .models import user
+from .models import user, post, comment
 
 def create_app():
     app = Flask(__name__)
@@ -20,7 +20,6 @@ def create_app():
     app.config.from_envvar("APPLICATION_SETTINGS")
     api = Api(app)
     
-    # 추가!
     jwt = JWTManager(app)
     migrate = Migrate(app, db)
 
@@ -28,16 +27,13 @@ def create_app():
     ma.init_app(app)
     migrate.init_app(app, db)
     
-    # 추가!
     @app.before_first_request
     def create_tables():
         db.create_all()
         
-    # 추가!
     @app.errorhandler(ValidationError)
     def handle_marshmallow_validation(err):
         return jsonify(err.messages), 400
-
     
     return app
 

@@ -31,6 +31,10 @@ class PostModel(db.Model):
         """
         return cls.query.filter_by(id=_id).first()
     
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()
+    
     def save_to_db(self):
         """
         게시물을 데이터베이스에 저장

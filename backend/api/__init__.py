@@ -1,14 +1,11 @@
-# 아래의 줄에 jsonify 추가!
 from flask import Flask, jsonify
 from flask_restful import Api
 from dotenv import load_dotenv
 
-# 추가!
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from marshmallow import ValidationError
 
-# 추가!
 from .db import db
 from .ma import ma
 from .models import user, post, comment

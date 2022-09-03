@@ -10,3 +10,4 @@ __pycache__/
 venv
 *.db
 frontend/assets/img
+.vscode

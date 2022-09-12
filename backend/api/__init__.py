@@ -11,7 +11,7 @@ from .ma import ma
 
 from .models import user, post, comment
 
-from .resources.post import PostList
+from .resources.post import PostList, Post
 
 
 def create_app():
@@ -38,5 +38,6 @@ def create_app():
         return jsonify(err.messages), 400
 
     api.add_resource(PostList, "/posts/")
+    api.add_resource(Post, "/posts/<int:id>")
 
     return app

@@ -18,11 +18,30 @@ class Post(Resource):
 
     @classmethod
     def put(cls, id):
-        pass
+        post_json = request.get_json()
+        post = PostModel.find_by_id(id)
+        # 게시물이 존재한다면 수정한다.
+        if post:
+            post.title = post_json["title"]
+            post.content = post_json["content"]
+        # 게시물이 존재하지 않는다면 새 게시물을 생성한다.
+        else:
+            try:
+                post = post_schema.load(post_json)
+            except ValidationError as err:
+                return err.messages, 400
+
+        post.save_to_db()
+
+        return post_schema.dump(post), 200
 
     @classmethod
     def delete(cls, id):
-        pass
+        post = PostModel.find_by_id(id)
+        if post:
+            post.delete_from_db()
+            return {"message": "게시물이 성공적으로 삭제되었습니다."}, 200
+        return {"Error": "게시물을 찾을 수 없습니다."}, 404
 
 
 class PostList(Resource):
@@ -34,7 +53,12 @@ class PostList(Resource):
 
     @classmethod
     def get(cls):
-        return {"posts": post_list_schema.dump(PostModel.find_all())}, 200
+        page = request.args.get("page", type=int, default=1)
+        ordered_posts = PostModel.query.order_by(PostModel.id.desc())
+        pagination = ordered_posts.paginate(page, per_page=10, error_out=False)
+        result = post_list_schema.dump(pagination.items)
+        return result
+        # return {"posts": post_list_schema.dump(PostModel.find_all())}, 200
 
     @classmethod
     def post(cls):

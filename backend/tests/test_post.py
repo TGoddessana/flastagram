@@ -90,8 +90,22 @@ class PostListTestCase(CommonTestCaseSettings):
         # 게시물 목록의 맨 마지막 게시물의 id 는 81 이어야 한다.
         self.assertEqual(81, response[-1]["id"])
 
-    def post_get_post_detail(self):
-        pass
+
+class PostDetailTestCase(CommonTestCaseSettings):
+    def test_post_post_detail(self):
+        """
+        1. 임의의 게시물 한 개를 생성한다.
+        2. 해당 게시물은 id가 1로 들어갈 것이다.
+        3. posts/1 에 접속하면 게시물의 내용이 같아야 한다.
+        4. posts/2 와 같이 없는 게시물에 접속하면 상태 코드가 404여야 한다.
+        """
+        PostModel(
+            title="상세조회를 위한 테스트 게시물입니다.", content=f"상세조회를 위한 테스트 게시물의 내용입니다.", author_id=1
+        ).save_to_db()
+        response = self.client.get("http://127.0.0.1:5000/posts/1").get_json()
+        self.assertEqual("상세조회를 위한 테스트 게시물입니다.", response["title"])
+        response = self.client.get("http://127.0.0.1:5000/posts/2")
+        self.assertEqual(404, response.status_code)
 
 
 if __name__ == "__main__":

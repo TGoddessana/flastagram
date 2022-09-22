@@ -1,7 +1,5 @@
-/* eslint-disable max-len */
 // API 기본 URL들을 정의합니다.
 const postListBseUrl = "http://127.0.0.1:5000/posts/";
-// const postDetailBaseUrl = ''
 // #TODO : .env 로 url 주소 얻어오기
 
 /** Flask API 로부터 데이터를 가져옵니다.
@@ -32,7 +30,6 @@ function copyDiv() {
 /**
  * getPostListDatafromAPI() 로부터 게시물 목록 데이터를 불러옵니다.
  * 불러온 데이터 결과의 길이만큼 (페이지네이션 처리) 게시물을 반복해 그립니다.
- * 근데 왜 9-i 처럼 역순으로 적용되는지 잘 모르게써여
  */
 function loadPosts() {
   getPostListDatafromAPI()

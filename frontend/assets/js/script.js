@@ -38,10 +38,8 @@ function loadPosts() {
         copyDiv();
         const authorNameElements = document.querySelectorAll(".author");
         for (const authorName in authorNameElements) {
-          if (authorNameElements.hasOwnPropertey(authorName)) {
-            authorNameElements[authorName].innerText =
-              result[9 - i]["author_name"];
-          }
+          authorNameElements[authorName].innerText =
+            result[9 - i]["author_name"];
         }
         const titleElement = document.querySelector(".title");
         titleElement.innerText = result[9 - i]["title"];

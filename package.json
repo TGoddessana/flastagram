@@ -1,0 +1,25 @@
+{
+  "name": "flastagram",
+  "version": "1.0.0",
+  "description": "instagram clone project using flask backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TGoddessana/flastagram.git"
+  },
+  "author": "goddessana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TGoddessana/flastagram/issues"
+  },
+  "homepage": "https://github.com/TGoddessana/flastagram#readme",
+  "devDependencies": {
+    "eslint": "^8.23.1",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1"
+  }
+}

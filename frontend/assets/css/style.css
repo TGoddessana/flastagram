@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,500;0,700;1,400;1,900&display=swap');
+
+
 *{
   margin: 0;
   padding: 0;
@@ -12,6 +15,7 @@ body {
   width: 100%;
   background: #fafafa;
   position: relative;
+  font-family: 'roboto', sans-serif;
 }
 
 .navbar{
@@ -222,9 +226,19 @@ body {
   line-height: 20px;
 }
 
+
 .description span {
   font-weight: bold;
   margin-right: 10px;
+}
+
+.author {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.title {
+  font-weight: bold;
 }
 
 .post-time{

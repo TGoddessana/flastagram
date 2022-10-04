@@ -12,6 +12,7 @@ from .ma import ma
 from .models import user, post, comment
 
 from .resources.post import PostList, Post
+from .resources.user import UserRegister
 
 
 def create_app():
@@ -22,8 +23,8 @@ def create_app():
     app.config.from_envvar("APPLICATION_SETTINGS")
     app.config.update(RESTFUL_JSON=dict(ensure_ascii=False))
     api = Api(app)
-
     jwt = JWTManager(app)
+
     migrate = Migrate(app, db)
 
     db.init_app(app)
@@ -38,7 +39,9 @@ def create_app():
     def handle_marshmallow_validation(err):
         return jsonify(err.messages), 400
 
+    # register Resources...
     api.add_resource(PostList, "/posts/")
     api.add_resource(Post, "/posts/<int:id>")
+    api.add_resource(UserRegister, "/register/")
 
     return app

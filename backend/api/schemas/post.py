@@ -1,11 +1,11 @@
-from api.ma import ma, Method
+from api.ma import ma, Method, String
 from api.models.post import PostModel
 from api.models.user import UserModel
 
 
 class PostSchema(ma.SQLAlchemyAutoSchema):
     """
-    게시물 모델에 관한 직렬화 규칙 정의
+    게시물 모델에 관한 직렬화 규칙을 정의합니다.
     """
 
     author_name = Method("get_author_name")

@@ -2,8 +2,30 @@ from api.models.user import UserModel
 from flask_restful import Resource, request
 from api.schemas.user import UserRegisterSchema
 from werkzeug.security import generate_password_hash
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+    get_jwt,
+    jwt_required,
+)
+from flask.views import MethodView
+from werkzeug.security import check_password_hash
 
 register_schema = UserRegisterSchema()
+
+
+class UserLogin(MethodView):
+    def post(self):
+        data = request.get_json()
+        user = UserModel.find_by_email(data["email"])
+
+        if user and check_password_hash(user.password, data["password"]):
+            access_token = create_access_token(identity=user.username, fresh=True)
+            refresh_token = create_refresh_token(identity=user.username)
+            return {"access_token": access_token, "refresh_token": refresh_token}, 200
+
+        return {"Unauthorized": "이메일과 비밀번호를 확인하세요."}, 401
 
 
 class UserRegister(Resource):

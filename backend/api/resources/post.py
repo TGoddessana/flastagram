@@ -2,7 +2,8 @@ from flask_restful import Resource, request
 from api.models.post import PostModel, db
 from api.schemas.post import PostSchema
 from marshmallow import ValidationError
-
+from flask_jwt_extended import jwt_required
+from flask import abort
 
 post_schema = PostSchema()
 post_list_schema = PostSchema(many=True)
@@ -14,9 +15,11 @@ class Post(Resource):
         post = PostModel.find_by_id(id)
         if post:
             return post_schema.dump(post), 200
-        return {"Error": "게시물을 찾을 수 없습니다."}, 404
+        else:
+            return {"Error": "게시물을 찾을 수 없습니다."}, 404
 
     @classmethod
+    @jwt_required()
     def put(cls, id):
         post_json = request.get_json()
         post = PostModel.find_by_id(id)
@@ -36,6 +39,7 @@ class Post(Resource):
         return post_schema.dump(post), 200
 
     @classmethod
+    @jwt_required()
     def delete(cls, id):
         post = PostModel.find_by_id(id)
         if post:
@@ -58,9 +62,9 @@ class PostList(Resource):
         pagination = ordered_posts.paginate(page, per_page=10, error_out=False)
         result = post_list_schema.dump(pagination.items)
         return result
-        # return {"posts": post_list_schema.dump(PostModel.find_all())}, 200
 
     @classmethod
+    @jwt_required()
     def post(cls):
         post_json = request.get_json()
         try:

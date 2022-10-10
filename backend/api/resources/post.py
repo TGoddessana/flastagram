@@ -1,9 +1,11 @@
 from flask_restful import Resource, request
 from api.models.post import PostModel, db
+from api.models.user import UserModel
 from api.schemas.post import PostSchema
 from marshmallow import ValidationError
 from flask_jwt_extended import jwt_required
 from flask import abort
+from flask_jwt_extended import get_jwt_identity
 
 post_schema = PostSchema()
 post_list_schema = PostSchema(many=True)
@@ -67,8 +69,12 @@ class PostList(Resource):
     @jwt_required()
     def post(cls):
         post_json = request.get_json()
+        username = get_jwt_identity()
+        author_id = UserModel.find_by_username(username).id
+        print(author_id)
         try:
             new_post = post_schema.load(post_json)
+            new_post.author_id = author_id
         except ValidationError as err:
             return err.messages, 400
         try:

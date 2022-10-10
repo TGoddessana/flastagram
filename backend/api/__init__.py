@@ -1,3 +1,4 @@
+from datetime import timedelta
 from flask import Flask, jsonify
 from flask_restful import Api
 from dotenv import load_dotenv
@@ -12,7 +13,7 @@ from .ma import ma
 from .models import user, post, comment
 
 from .resources.post import PostList, Post
-from .resources.user import UserRegister, UserLogin
+from .resources.user import UserRegister, UserLogin, RefreshToken
 
 
 def create_app():
@@ -23,6 +24,8 @@ def create_app():
     app.config.from_envvar("APPLICATION_SETTINGS")
     app.config.update(RESTFUL_JSON=dict(ensure_ascii=False))
     app.config["JSON_AS_ASCII"] = False
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
+    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
     api = Api(app)
     jwt = JWTManager(app)
 
@@ -62,7 +65,9 @@ def create_app():
 
     @jwt.unauthorized_loader
     def missing_token_callback(error):
-        """ """
+        """
+        클라이언트에 토큰이 담겨오지 않았을 때의 에러 메시지를 지정합니다.
+        """
         return (
             jsonify(
                 {
@@ -77,5 +82,6 @@ def create_app():
     api.add_resource(Post, "/posts/<int:id>")
     api.add_resource(UserRegister, "/register/")
     api.add_resource(UserLogin, "/login/")
+    api.add_resource(RefreshToken, "/refresh/")
 
     return app

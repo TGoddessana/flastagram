@@ -24,19 +24,18 @@ class Post(Resource):
     @jwt_required()
     def put(cls, id):
         post_json = request.get_json()
+        username = get_jwt_identity()
+        author_id = UserModel.find_by_username(username).id
         post = PostModel.find_by_id(id)
-        # 게시물이 존재한다면 수정한다.
-        if post:
-            post.title = post_json["title"]
-            post.content = post_json["content"]
-        # 게시물이 존재하지 않는다면 새 게시물을 생성한다.
-        else:
-            try:
-                post = post_schema.load(post_json)
-            except ValidationError as err:
-                return err.messages, 400
+        # 게시물의 존재 여부를 먼저 체크한다.
+        if not post:
+            return {"Error": "게시물을 찾을 수 없습니다."}, 404
 
-        post.save_to_db()
+        # 게시물의 저자와, 요청을 보낸 사용자가 같다면 수정을 진행할 수 있다.
+        if post.author_id == author_id:
+            post.update_to_db()
+        else:
+            return {"Error": "게시물은 작성자만 수정할 수 있습니다."}, 403
 
         return post_schema.dump(post), 200
 
@@ -71,7 +70,6 @@ class PostList(Resource):
         post_json = request.get_json()
         username = get_jwt_identity()
         author_id = UserModel.find_by_username(username).id
-        print(author_id)
         try:
             new_post = post_schema.load(post_json)
             new_post.author_id = author_id

@@ -50,5 +50,13 @@ class PostModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def update_to_db(self, **data):
+        """
+        데이터베이스에 존재하는 게시물을 수정
+
+        """
+        setattr(self, "content", 1)
+        db.session.commit()
+
     def __repr__(self):
         return f"<Post Object : {self.title}>"

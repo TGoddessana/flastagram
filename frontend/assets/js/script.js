@@ -1,5 +1,5 @@
 // API 기본 URL들을 정의합니다.
-const postListBseUrl = "http://127.0.0.1:5000/posts/";
+const postListBseUrl = "http://127.0.0.1:5000/posts/?page=2";
 // #TODO : .env 로 url 주소 얻어오기
 
 /** Flask API 로부터 데이터를 가져옵니다.
@@ -39,12 +39,12 @@ function loadPosts() {
         const authorNameElements = document.querySelectorAll(".author");
         for (const authorName in authorNameElements) {
           authorNameElements[authorName].innerText =
-            result[9 - i]["author_name"];
+            result[result.length - 1 - i]["author_name"];
         }
         const titleElement = document.querySelector(".title");
-        titleElement.innerText = result[9 - i]["title"];
+        titleElement.innerText = result[result.length - 1 - i]["title"];
         const contentElement = document.querySelector(".content");
-        contentElement.innerText = result[9 - i]["content"];
+        contentElement.innerText = result[result.length - 1 - i]["content"];
         if (i == 0) {
           document.getElementById("copied-posts").style.display = "none";
         }

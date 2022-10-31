@@ -50,12 +50,17 @@ class PostModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def update_to_db(self, **data):
+    def update_to_db(self, data):
         """
         데이터베이스에 존재하는 게시물을 수정
-
+        data = {
+                 "title":"example content",
+                 "content":"example content"
+                 }
+        형태의 딕셔너리가 들어올 것이라고 가정
         """
-        setattr(self, "content", 1)
+        for key, value in data.items():
+            setattr(self, key, value)
         db.session.commit()
 
     def __repr__(self):

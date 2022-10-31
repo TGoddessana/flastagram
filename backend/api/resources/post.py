@@ -23,7 +23,16 @@ class Post(Resource):
     @classmethod
     @jwt_required()
     def put(cls, id):
+        """
+        게시물의 전체 내용을 받아서 게시물을 수정
+        없는 리소스를 수정하려고 한다면 HTTP 404 상태 코드와 에러 메시지를,
+        그렇지 않은 경우라면 수정을 진행
+        """
         post_json = request.get_json()
+        # first-fail 을 위한 입력 데이터 검증
+        validate_result = post_schema.validate(post_json)
+        if validate_result:
+            return validate_result, 400
         username = get_jwt_identity()
         author_id = UserModel.find_by_username(username).id
         post = PostModel.find_by_id(id)
@@ -33,7 +42,7 @@ class Post(Resource):
 
         # 게시물의 저자와, 요청을 보낸 사용자가 같다면 수정을 진행할 수 있다.
         if post.author_id == author_id:
-            post.update_to_db()
+            post.update_to_db(post_json)
         else:
             return {"Error": "게시물은 작성자만 수정할 수 있습니다."}, 403
 

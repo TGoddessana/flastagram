@@ -35,7 +35,9 @@ class UserLogin(MethodView):
                 token.refresh_token_value = refresh_token
                 token.save_to_db()
             else:
-                new_token = RefreshTokenModel(user_id=user.id, refresh_token_value=refresh_token)
+                new_token = RefreshTokenModel(
+                    user_id=user.id, refresh_token_value=refresh_token
+                )
                 new_token.save_to_db()
             return {"access_token": access_token, "refresh_token": refresh_token}, 200
 

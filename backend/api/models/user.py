@@ -41,8 +41,12 @@ class UserModel(db.Model):
     followed = db.relationship(  # 본인이 팔로우한 유저들
         "UserModel",  # User 모델 스스로를 참조
         secondary=followers,  # 연관 테이블 이름을 지정
-        primaryjoin=(followers.c.follower_id == id),  # followers 테이블에서 특정 유저를 팔로우하는 유저들을 찾음
-        secondaryjoin=(followers.c.followed_id == id),  # followers 테이블에서 특정 유저가 팔로우한 모든 유저들을 찾음
+        primaryjoin=(
+            followers.c.follower_id == id
+        ),  # followers 테이블에서 특정 유저를 팔로우하는 유저들을 찾음
+        secondaryjoin=(
+            followers.c.followed_id == id
+        ),  # followers 테이블에서 특정 유저가 팔로우한 모든 유저들을 찾음
         backref=db.backref("follower_set", lazy="dynamic"),  # 역참조 관계 설정
         lazy="dynamic",
     )
@@ -112,7 +116,9 @@ class RefreshTokenModel(db.Model):
     __tablename__ = "RefreshToken"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("User.id", ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(
+        db.Integer, db.ForeignKey("User.id", ondelete="CASCADE"), nullable=False
+    )
     user = db.relationship("UserModel", backref="token")
     refresh_token_value = db.Column(db.String(512), nullable=False, unique=True)
 

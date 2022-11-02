@@ -5,19 +5,26 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from flask_uploads import configure_uploads, patch_request_class  # 추가!
 from marshmallow import ValidationError
+
+from api.utils.image_upload import IMAGE_SET
+
 
 from .db import db
 from .ma import ma
 
 from .models import user, post, comment
 
+
 from .resources.post import PostList, Post
 from .resources.user import UserRegister, UserLogin, RefreshToken
+from .resources.image import ImageUpload  # 추가!
 
 
 def create_app():
     app = Flask(__name__)
+
     CORS(app, resources={r"*": {"origins": "*"}})
     load_dotenv(".env", verbose=True)
     app.config.from_object("config.dev")
@@ -26,9 +33,11 @@ def create_app():
     app.config["JSON_AS_ASCII"] = False
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
+
+    configure_uploads(app, IMAGE_SET)
+
     api = Api(app)
     jwt = JWTManager(app)
-
     migrate = Migrate(app, db)
 
     db.init_app(app)
@@ -83,5 +92,6 @@ def create_app():
     api.add_resource(UserRegister, "/register/")
     api.add_resource(UserLogin, "/login/")
     api.add_resource(RefreshToken, "/refresh/")
+    api.add_resource(ImageUpload, "/upload/image/")
 
     return app

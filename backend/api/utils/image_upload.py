@@ -6,7 +6,7 @@ from flask_uploads import UploadSet, IMAGES
 IMAGE_SET = UploadSet("images", IMAGES)
 
 
-def save_image(image, folder, name):
+def save_image(image, folder, name=None):
     """FileStorage 인스턴스를 받아서, 폴더에 저장합니다."""
     return IMAGE_SET.save(image, folder, name)
 

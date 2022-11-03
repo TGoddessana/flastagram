@@ -9,6 +9,8 @@ class PostSchema(ma.SQLAlchemyAutoSchema):
     게시물 모델에 관한 직렬화 규칙을 정의합니다.
     """
 
+    image = fields.String(required=True)
+
     created_at = fields.DateTime(format="%Y-%m-%d,%H:%M:%S")
     updated_at = fields.DateTime(format="%Y-%m-%d,%H:%M:%S")
 

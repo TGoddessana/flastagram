@@ -19,7 +19,7 @@ from .models import user, post, comment
 
 from .resources.post import PostList, Post
 from .resources.user import UserRegister, UserLogin, RefreshToken
-from .resources.image import ImageUpload  # 추가!
+from .resources.image import PostImageUpload, ProfileImageUpload, Image
 
 
 def create_app():
@@ -92,6 +92,8 @@ def create_app():
     api.add_resource(UserRegister, "/register/")
     api.add_resource(UserLogin, "/login/")
     api.add_resource(RefreshToken, "/refresh/")
-    api.add_resource(ImageUpload, "/upload/image/")
+    api.add_resource(PostImageUpload, "/upload/post/image/")
+    api.add_resource(ProfileImageUpload, "/upload/profile/image/")
+    api.add_resource(Image, "/statics/<path:path>")
 
     return app

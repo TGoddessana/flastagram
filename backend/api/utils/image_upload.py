@@ -66,3 +66,12 @@ def get_extension(file):
     """
     filename = _retrieve_filename(file)
     return os.path.splitext(filename)[1]
+
+
+def get_path_without_basename(path):
+    """
+    파일의 확장자명을 제외하고 경로를 반환합니다.
+    예를 들면, get_path_without_basename('hello/world/brothers.jpg') 는,
+    'hello/world/' 를 반환할 겁니다.
+    """
+    return "/".join(path.split("/")[:-1])

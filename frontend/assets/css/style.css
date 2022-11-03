@@ -232,7 +232,12 @@ body {
   margin-right: 10px;
 }
 
-.author {
+.author-up {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.author-down {
   font-weight: bold;
   margin-right: 10px;
 }

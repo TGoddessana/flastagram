@@ -14,3 +14,7 @@ app.listen(3000, (err) => {
 app.get("/flastagram/posts", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "post_list.html"));
 });
+
+app.get("/flastagram/post-create", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "post_create.html"));
+});

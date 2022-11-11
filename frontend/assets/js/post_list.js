@@ -4,13 +4,11 @@ const imageRetrieveBseUrl = "http://127.0.0.1:5000/statics/";
 // #TODO : .env 로 url 주소 얻어오기
 
 /** Flask API 로부터 데이터를 가져옵니다.
- * TODO : GetData() 의 인자에 따라서 페이지를 다르게 가져오게 해야 합니다.
  * promise 객체를 반환합니다.
  */
-async function getPostListDatafromAPI() {
-  // TODO : 본 함수에서 페이지 id를 인자로 받아 원하는 페이지 띄울 수 있도록 처리
+async function getPostListDatafromAPI(page) {
   try {
-    const somePromise = await fetch(postListBseUrl);
+    const somePromise = await fetch(postListBseUrl + "?page=" + page);
     const result = somePromise.json();
     return result;
   } catch (error) {

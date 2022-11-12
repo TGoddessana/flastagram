@@ -6,7 +6,7 @@ const imageRetrieveBseUrl = "http://127.0.0.1:5000/statics/";
 /** Flask API 로부터 데이터를 가져옵니다.
  * promise 객체를 반환합니다.
  */
-async function getPostListDatafromAPI(page) {
+async function getPostListDatafromAPI(page = 1) {
   try {
     const somePromise = await fetch(postListBseUrl + "?page=" + page);
     const result = somePromise.json();

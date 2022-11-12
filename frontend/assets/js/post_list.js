@@ -1,7 +1,6 @@
 // API 기본 URL들을 정의합니다.
 const postListBseUrl = "http://127.0.0.1:5000/posts/";
 const imageRetrieveBseUrl = "http://127.0.0.1:5000/statics/";
-// #TODO : .env 로 url 주소 얻어오기
 
 /** Flask API 로부터 데이터를 가져옵니다.
  * promise 객체를 반환합니다.

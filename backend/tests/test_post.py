@@ -63,7 +63,9 @@ class PostListTestCase(CommonTestCaseSettings):
         self.assertEqual(91, response[-1]["id"])
 
         # 게시물의 두 번째 페이지로 요청을 보낸다.
-        response = self.client.get("http://127.0.0.1:5000/posts/?page=2").get_json()
+        response = self.client.get(
+            "http://127.0.0.1:5000/posts/?page=2"
+        ).get_json()
 
         # 게시물 목록의 두 번째 페이지의 맨 첫 번째 게시물의 id 는 90이어야 한다.
         self.assertEqual(90, response[0]["id"])
@@ -101,9 +103,14 @@ class PostListTestCase(CommonTestCaseSettings):
         # test_user 로 로그인 후 access token, refresh token 발급
         data = json.dumps({"email": "test@example.com", "password": "12345"})
         response = self.client.post(
-            "http://127.0.0.1:5000/login/", data=data, content_type="application/json"
+            "http://127.0.0.1:5000/login/",
+            data=data,
+            content_type="application/json",
         ).get_json()
-        access_token, refresh_token = response["access_token"], response["refresh_token"]
+        access_token, refresh_token = (
+            response["access_token"],
+            response["refresh_token"],
+        )
 
         # /posts 에 access token 없이 새로운 게시물을 생성해 달라고 요청
         data = json.dumps(

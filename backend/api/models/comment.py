@@ -47,6 +47,14 @@ class CommentModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def update_to_db(self, data):
+        """
+        데이터베이스에 존재하는 댓글을 수정
+        """
+        for key, value in data.items():
+            setattr(self, key, value)
+        db.session.commit()
+
     @classmethod
     def find_by_id(cls, id):
         """

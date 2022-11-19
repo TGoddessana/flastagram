@@ -113,6 +113,14 @@ class UserModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def update_to_db(self, data):
+        """
+        데이터베이스에 존재하는 유저 정보를 수정
+        """
+        for key, value in data.items():
+            setattr(self, key, value)
+        db.session.commit()
+
     def __repr__(self):
         return f"<User Object : {self.username}>"
 

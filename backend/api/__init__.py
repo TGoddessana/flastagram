@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
-from flask_uploads import configure_uploads, patch_request_class  # 추가!
+from flask_uploads import configure_uploads, patch_request_class
 from marshmallow import ValidationError
 
 from api.utils.image_upload import IMAGE_SET
@@ -18,7 +18,7 @@ from .models import user, post, comment
 
 
 from .resources.post import PostList, Post
-from .resources.user import UserRegister, UserLogin, RefreshToken
+from .resources.user import UserRegister, UserLogin, RefreshToken, MyPage
 from .resources.image import PostImageUpload, ProfileImageUpload, Image
 from .resources.comment import CommentList, CommentDetail
 
@@ -90,6 +90,9 @@ def create_app():
     api.add_resource(UserRegister, "/register/")
     api.add_resource(UserLogin, "/login/")
     api.add_resource(RefreshToken, "/refresh/")
+
+    # 마이페이지 API
+    api.add_resource(MyPage, "/mypage/<int:id>/")
 
     # 이미지 업로드, 조회 API
     api.add_resource(PostImageUpload, "/upload/post/image/")

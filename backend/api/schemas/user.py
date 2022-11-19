@@ -12,6 +12,17 @@ fields.Field.default_error_messages[
 fields.Field.default_error_messages["null"] = "해당 필드는 null 이 될 수 없습니다."
 
 
+class UserSchema(ma.SQLAlchemyAutoSchema):
+    image = String(required=True)
+    created_at = fields.DateTime(format="%Y-%m-%d")
+
+    class Meta:
+        model = UserModel
+        exclude = ("password",)
+        # 읽기 전용 필드
+        dump_only = ("email", "username")
+
+
 class AuthorSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = UserModel

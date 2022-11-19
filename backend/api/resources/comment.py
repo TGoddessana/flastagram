@@ -75,10 +75,10 @@ class CommentDetail(Resource):
         username = get_jwt_identity()
         author_id = UserModel.find_by_username(username).id
         post = PostModel.find_by_id(post_id)
-        # 댓글의 존재 여부를 먼저 체크한다.
+        # 게시물의 존재 여부를 먼저 체크한다.
         if not post:
             return {"Error": "게시물을 찾을 수 없습니다."}, 404
-
+        # 다음 댓글의 존재 여부를 체크한다.
         comment = CommentModel.find_by_id(comment_id)
         if not comment:
             return {"Error": "댓글을 찾을 수 없습니다."}, 404

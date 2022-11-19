@@ -153,7 +153,9 @@ class PostDetailTestCase(CommonTestCaseSettings):
             content=f"상세조회를 위한 테스트 게시물의 내용입니다.",
             author_id=1,
         ).save_to_db()
-        response = self.client.get("http://127.0.0.1:5000/posts/1").get_json()
+        response = self.client.get(
+            "http://127.0.0.1:5000/posts/1", content_type="application/json"
+        ).get_json()
         self.assertEqual("상세조회를 위한 테스트 게시물입니다.", response["title"])
         response = self.client.get("http://127.0.0.1:5000/posts/2")
         self.assertEqual(404, response.status_code)

@@ -26,7 +26,6 @@ class CommonTestCaseSettings(unittest.TestCase):
         load_dotenv(".env", verbose=True)
         self.app.config.from_object("config.test")
         self.app.config.from_envvar("APPLICATION_SETTINGS_FOR_TEST")
-        self.app.config.update(RESTFUL_JSON=dict(ensure_ascii=False))
         self.client = self.app.test_client()
         db.create_all()
 

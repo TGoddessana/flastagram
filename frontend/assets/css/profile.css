@@ -26,3 +26,14 @@ div {
 .input {
     margin-bottom: 100px;
 }
+
+#preview-image{
+    width: 700px;
+    height: 700px;
+    background-color: darkgrey;
+}
+
+#preview-image > img{
+    width: 700px;
+    height: 700px;
+}

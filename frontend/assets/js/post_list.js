@@ -30,14 +30,15 @@ function getCopyDiv() {
  * id, 제목, 내용, 저자, 사진을 받아 해당 div를 하나의 게시물로 완성합니다.
  */
 function getCompletedPost(
-  idValue,
-  titleValue,
-  contentValue,
-  authorNameValue,
-  feedImgValue
+  idValue, // 게시물의 id
+  titleValue, // 게시물의 제목
+  feedImgValue, // 게시물의 피드 이미지
+  contentValue, // 게시물의 내용
+  authorNameValue, // 저자의 이름
+  authorImageValue // 저자의 프로필 사진
 ) {
   div = getCopyDiv();
-  let authorUpImg = div.children[0].children[0].children[0];
+  let authorUpImg = div.children[0].children[0].children[0].children[0];
   let authorUpName = div.children[0].children[0].children[1];
   let feedImg = div.children[1];
   let authorDownName = div.children[2].children[3];
@@ -47,10 +48,11 @@ function getCompletedPost(
 
   div.id = idValue;
   title.innerText = titleValue;
+  feedImg.src = feedImgValue;
   content.innerText = contentValue;
   authorUpName.innerText = authorNameValue;
+  authorUpImg.src = authorImageValue;
   authorDownName.innerText = authorNameValue;
-  feedImg.src = feedImgValue;
 
   return div;
 }
@@ -64,23 +66,47 @@ function loadMorePosts(page) {
   getPostListDatafromAPI(page).then((result) => {
     const postDiv = document.querySelector(".post-wrapper");
     for (let i = 0; i < result.length; i++) {
+      // 게시물의 id
       const id = result[i]["id"];
+      // 게시물의 제목
       const title = result[i]["title"];
-      const content = result[i]["content"];
-      const author = result[i]["author_name"];
+      // 게시물의 피드 이미지
       const image = imageRetrieveBseUrl + result[i]["image"];
+      // 게시물의 내용
+      const content = result[i]["content"];
+      // 저자의 이름
+      const authorName = result[i]["author"]["username"];
+      // 저자의 프로필 사진
+      const authorImage = imageRetrieveBseUrl + result[i]["author"]["image"];
 
       postDiv.append(
         getCompletedPost(
           (idValue = id),
           (titleValue = title),
+          (feedImgValue = image),
           (contentValue = content),
-          (authorNameValue = author),
-          (feedImgValue = image)
+          (authorNameValue = authorName),
+          (authorImageValue = authorImage)
         )
       );
     }
   });
+}
+
+/**
+ * 프로필 정보를 수정하거나 조회하기 위한 팝업창을 띄웁니다.
+ */
+function showProfile() {
+  var width = 800;
+  var height = 950;
+  var left = window.screen.width / 2 - width / 2;
+  var top = window.screen.height / 4;
+
+  var windowStatus = `width=${width}, height=${height}, left=${left}, top=${top}, resizable=no, toolbars=no, menubar=no`;
+
+  const url = "http://localhost:3000/flastagram/profile";
+
+  window.open(url, "something", windowStatus);
 }
 
 /**

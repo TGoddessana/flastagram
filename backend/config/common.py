@@ -2,7 +2,7 @@ from datetime import timedelta
 import os
 
 
-RESTFUL_JSON = dict(ensure_ascii=False)
+JSON_AS_ASCII = False
 JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
 JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 

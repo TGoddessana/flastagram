@@ -25,6 +25,7 @@
     border: 2px solid #e6e6e6;
     padding: 40px 50px;
     opacity:0.9;
+    border-radius: 10px;
   }
   
   .login-form {
@@ -73,7 +74,9 @@
     margin: 10px auto;
     border: 1px solid #e6e6e6;
     padding: 20px 50px;
+    opacity:0.9;
     background-color: #fff;
+    border-radius: 10px;
   }
   
   .s-part {

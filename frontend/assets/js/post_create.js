@@ -92,10 +92,7 @@ function serialize(rawData) {
 async function submitPostData() {
   // 인증을 위한 header 설정
   var myHeaders = new Headers();
-  myHeaders.append(
-    "Authorization",
-    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjY3NTc2MjU4LCJqdGkiOiI5YTY2NjIyZS1iZmM0LTQ5N2ItODNlYS1lNjdkNjcxYzU2OTciLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiXHVjY2EwXHVjMjE4IiwibmJmIjoxNjY3NTc2MjU4LCJleHAiOjE2Njc2NjI2NTh9.44pVL1n0rxhSl-LfdQ1KdOFKe7E5RLdLajeFTs-iMSA"
-  );
+  myHeaders.append("Authorization", `Bearer ${access_token}`);
   myHeaders.append("Content-Type", "application/json");
 
   // 보낼 데이터 설정

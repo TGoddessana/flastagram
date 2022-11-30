@@ -17,7 +17,9 @@ class Post(Resource):
     def get(cls, id):
         post = PostModel.find_by_id(id)
         if post:
-            return post_schema.dump(post), 200
+            user = UserModel.find_by_username(get_jwt_identity())
+            _post_schema = PostSchema(context={"user": user})
+            return _post_schema.dump(post), 200
         else:
             return {"Error": "게시물을 찾을 수 없습니다."}, 404
 
@@ -69,10 +71,15 @@ class PostList(Resource):
     @classmethod
     @jwt_required()
     def get(cls):
+        user = UserModel.find_by_username(get_jwt_identity())
         page = request.args.get("page", type=int, default=1)
         ordered_posts = PostModel.query.order_by(PostModel.id.desc())
-        pagination = ordered_posts.paginate(page, per_page=10, error_out=False)
-        result = post_list_schema.dump(pagination.items)
+        pagination = ordered_posts.paginate(
+            page=page, per_page=10, error_out=False
+        )
+        user = UserModel.find_by_username(get_jwt_identity())
+        _post_list_schema = PostSchema(context={"user": user}, many=True)
+        result = _post_list_schema.dump(pagination.items)
         return result
 
     @classmethod
@@ -91,3 +98,33 @@ class PostList(Resource):
         except:
             return {"Error": "저장에 실패하였습니다."}, 500
         return post_schema.dump(new_post), 201
+
+
+class PostLike(Resource):
+    @classmethod
+    @jwt_required()
+    def put(cls, id):
+        """
+        id 로 특정되는 게시물에 좋아요를 누릅니다.
+        """
+        # 사용자, 게시물을 특정
+        user = UserModel.find_by_username(get_jwt_identity())
+        post = PostModel.find_by_id(id)
+        if not user or not post:
+            return {"Error": "잘못된 요청입니다."}, 400
+        post.do_like(user)
+        return "", 204
+
+    @classmethod
+    @jwt_required()
+    def delete(cls, id):
+        """
+        id 로 특정되는 게시물에 좋아요를 취소합니다.
+        """
+        # 사용자, 게시물을 특정
+        user = UserModel.find_by_username(get_jwt_identity())
+        post = PostModel.find_by_id(id)
+        if not user or not post:
+            return {"Error": "잘못된 요청입니다."}, 400
+        post.cancel_like(user)
+        return "", 204

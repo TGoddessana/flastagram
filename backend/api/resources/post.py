@@ -71,16 +71,30 @@ class PostList(Resource):
     @classmethod
     @jwt_required()
     def get(cls):
+        # 사용자, 페이지네이션 할 페이지 정의
         user = UserModel.find_by_username(get_jwt_identity())
         page = request.args.get("page", type=int, default=1)
+
+        # 내부에서만 사용할 schema 정의
+        _post_list_schema = PostSchema(context={"user": user}, many=True)
+
+        # 모델로부터 모든 게시물을 가져와 id 의 역순으로 정렬
         ordered_posts = PostModel.query.order_by(PostModel.id.desc())
+
+        # 클라이언트로부터 검색어 얻어오기
+        search_querystring = f'%%{request.args.to_dict().get("search")}%%'
+
+        # 검색어가 존재한다면, ordered_posts 재할당
+        if search_querystring:
+            ordered_posts = PostModel.filter_by_string(
+                search_querystring
+            ).order_by(PostModel.id.desc())
+
         pagination = ordered_posts.paginate(
             page=page, per_page=10, error_out=False
         )
-        user = UserModel.find_by_username(get_jwt_identity())
-        _post_list_schema = PostSchema(context={"user": user}, many=True)
-        result = _post_list_schema.dump(pagination.items)
-        return result
+
+        return _post_list_schema.dump(pagination.items)
 
     @classmethod
     @jwt_required()

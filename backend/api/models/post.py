@@ -130,5 +130,15 @@ class PostModel(db.Model):
             setattr(self, key, value)
         db.session.commit()
 
+    @classmethod
+    def filter_by_string(cls, string):
+        """
+        title, content 에 string이 포함되어있는 모든 게시물을 찾음
+        """
+        posts = cls.query.filter(
+            cls.content.ilike(string) | cls.title.ilike(string)
+        )
+        return posts
+
     def __repr__(self):
         return f"<Post Object : {self.title}>"

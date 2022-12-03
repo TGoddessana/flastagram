@@ -21,11 +21,13 @@ class PostSchema(ma.SQLAlchemyAutoSchema):
         return obj.get_liker_count()
 
     def get_is_like(self, obj):
-        return obj.is_like(self.context["user"])
+        if self.context.get("user"):
+            return obj.is_like(self.context["user"])
 
     class Meta:
         model = PostModel
         exclude = ("author_id",)
+        dump_only = "is_like"
         load_instance = True
         include_fk = True
         ordered = True

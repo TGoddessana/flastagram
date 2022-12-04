@@ -16,6 +16,36 @@ register_schema = UserRegisterSchema()
 user_schema = UserSchema()
 
 
+class Follow(Resource):
+    """
+    특정한 사용자를 팔로우/언팔로우합니다.
+    """
+
+    @classmethod
+    @jwt_required()
+    def put(cls, id):
+        request_user = UserModel.find_by_username(get_jwt_identity())
+        user_to_follow = UserModel.find_by_id(id)
+        if not request_user:
+            return {"error": "사용자를 찾을 수 없습니다."}, 400
+        if id == get_jwt().get("user_id"):
+            return {"error": "스스로를 팔로우할 수 없습니다."}, 400
+        request_user.follow(user_to_follow)
+        return "", 204
+
+    @classmethod
+    @jwt_required()
+    def delete(cls, id):
+        request_user = UserModel.find_by_username(get_jwt_identity())
+        user_to_unfollow = UserModel.find_by_id(id)
+        if not request_user:
+            return {"error": "사용자를 찾을 수 없습니다."}, 400
+        if id == get_jwt().get("user_id"):
+            return {"error": "스스로를 팔로우할 수 없습니다."}, 400
+        request_user.unfollow(user_to_unfollow)
+        return "", 204
+
+
 class MyPage(Resource):
     """
     마이페이지를 처리합니다.

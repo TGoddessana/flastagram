@@ -1,5 +1,6 @@
 from ..db import db
 from sqlalchemy.sql import func
+from sqlalchemy import or_
 
 post_to_liker = db.Table(
     "post_liker",
@@ -45,7 +46,7 @@ class PostModel(db.Model):
         db.ForeignKey("User.id", ondelete="CASCADE"),
         nullable=False,
     )
-    author = db.relationship("UserModel", backref="post_author")
+    author = db.relationship("UserModel", backref="post_set")
     comment_set = db.relationship(
         "CommentModel", backref="post", passive_deletes=True, lazy="dynamic"
     )
@@ -139,6 +140,16 @@ class PostModel(db.Model):
             cls.content.ilike(string) | cls.title.ilike(string)
         )
         return posts
+
+    @classmethod
+    def filter_by_followed(cls, followed_users):
+        """
+        현재 사용자가 팔로우한 모든 사람들의 리스트를 받아서,
+        해당 사람들이 작성한 게시물을 id의 역순으로 정렬하여 리턴
+        """
+        return cls.query.filter(
+            or_(cls.author == user for user in followed_users)
+        ).order_by(PostModel.id.desc())
 
     def __repr__(self):
         return f"<Post Object : {self.title}>"

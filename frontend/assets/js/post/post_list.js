@@ -1,36 +1,8 @@
-// API 기본 URL들을 정의합니다.
-const postListBseUrl = "http://127.0.0.1:5000/posts/";
-const imageRetrieveBseUrl = "http://127.0.0.1:5000/statics/";
-const refreshTokenBseUrl = "http://127.0.0.1:5000/refresh/";
-const profileRetrieveUrl = "http://127.0.0.1:5000/mypage/";
-
-// localStorage 로부터 토큰을 가져옵니다.
-let ACCESS_TOKEN = localStorage.getItem("access_token");
-let REFRESH_TOKEN = localStorage.getItem("refresh_token");
-
-/**
- * jwt 를 받아 BASE64URL 디코딩합니다.
- */
-function decodeJWT(token) {
-  let base64Url = token.split(".")[1];
-  let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  let jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split("")
-      .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join("")
-  );
-  return JSON.parse(jsonPayload);
-}
-
 /**
  * jwt 에서 얻은 유저의 id 로 프로필 사진을 얻어옵니다.
  */
 async function getProfileImagebyId(id) {
-  url = profileRetrieveUrl + `${id}/`;
+  url = MYPAGE_API_URL + `${id}/`;
   let myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${ACCESS_TOKEN}`);
   myHeaders.append("Content-Type", "application/json");
@@ -50,20 +22,8 @@ async function getProfileImagebyId(id) {
 async function loadProfileImage() {
   userId = await decodeJWT(ACCESS_TOKEN)["user_id"];
   profileElement = document.getElementsByClassName("user-profile");
-  let src = imageRetrieveBseUrl + (await getProfileImagebyId(userId));
-  console.log(src);
+  let src = STATIC_FILES_API_URL + (await getProfileImagebyId(userId));
   profileElement[0].src = src;
-}
-
-/**
- * 액세스 토큰과 리프레시 토큰이 localStorage 에 존재하지 않으면,
- * 로그인 페이지로 리다이렉트 처리합니다.
- */
-function handleUserLogin() {
-  // localStorage 에 access_token 이 존재하지 않으면 리다이렉트
-  if (!localStorage.getItem("access_token")) {
-    window.location.href = "http://localhost:3000/flastagram/login";
-  }
 }
 
 /**
@@ -80,7 +40,7 @@ async function getNewJWT() {
     headers: myHeaders,
   };
   const refreshResponse = await (
-    await fetch(refreshTokenBseUrl, requestOptions)
+    await fetch(REFRESH_TOKEN_API_URL, requestOptions)
   ).json();
   const access_token = refreshResponse["access_token"];
   const refresh_token = refreshResponse["refresh_token"];
@@ -108,18 +68,21 @@ async function getPostListDatafromAPI(page = 1) {
     };
 
     let rawResult = await fetch(
-      postListBseUrl + "?page=" + page,
+      POST_LIST_API_URL + "?page=" + page,
       requestOptions
     );
     // 만약 액세스 토큰이 만료되었다면, 새로운 액세스 토큰을 받아옵니다.
     if (rawResult.status == 401) {
       getNewJWT();
     }
-    rawResult = await fetch(postListBseUrl + "?page=" + page, requestOptions);
+    rawResult = await fetch(
+      POST_LIST_API_URL + "?page=" + page,
+      requestOptions
+    );
 
     // 만약 리프레시 토큰도 만료되었다면, 로그인 페이지로 리다이렉트 처리합니다.
     if (rawResult.status == 401) {
-      window.location.href = "http://localhost:3000/flastagram/login";
+      window.location.href = LOGIN_FRONTEND_URL;
     }
     const result = rawResult.json();
     return result;
@@ -184,13 +147,13 @@ function loadMorePosts(page) {
       // 게시물의 제목
       const title = result[i]["title"];
       // 게시물의 피드 이미지
-      const image = imageRetrieveBseUrl + result[i]["image"];
+      const image = STATIC_FILES_API_URL + result[i]["image"];
       // 게시물의 내용
       const content = result[i]["content"];
       // 저자의 이름
       const authorName = result[i]["author"]["username"];
       // 저자의 프로필 사진
-      const authorImage = imageRetrieveBseUrl + result[i]["author"]["image"];
+      const authorImage = STATIC_FILES_API_URL + result[i]["author"]["image"];
 
       postDiv.append(
         getCompletedPost(
@@ -207,6 +170,22 @@ function loadMorePosts(page) {
 }
 
 /**
+ * 게시물을 생성하기 위한 팝업창을 띄웁니다.
+ */
+function showPostCreateForm() {
+  let width = 800;
+  let height = 950;
+  let left = window.screen.width / 2 - width / 2;
+  let top = window.screen.height / 4;
+
+  let windowStatus = `width=${width}, height=${height}, left=${left}, top=${top}, resizable=no, toolbars=no, menubar=no`;
+
+  const url = POST_CREATE_FRONTEND_URL;
+
+  window.open(url, "something", windowStatus);
+}
+
+/**
  * 프로필 정보를 수정하거나 조회하기 위한 팝업창을 띄웁니다.
  */
 function showProfile() {
@@ -217,7 +196,7 @@ function showProfile() {
 
   let windowStatus = `width=${width}, height=${height}, left=${left}, top=${top}, resizable=no, toolbars=no, menubar=no`;
 
-  const url = "http://localhost:3000/flastagram/profile";
+  const url = PROFILE_FORM_FRONTEND_URL;
 
   window.open(url, "something", windowStatus);
 }
@@ -239,7 +218,6 @@ function executeInfiniteScroll() {
 }
 
 function main() {
-  handleUserLogin(); // 로컬스토리지에 JWT가 존재하지 않는다면 로그인 페이지로 이동합니다.
   executeInfiniteScroll(); // 스크롤을 내릴 때마다 게시물을 로드 (무한스크롤)
   loadProfileImage(); // 네비게이션 바에 프로필 사진을 뿌려줍니다.
 }

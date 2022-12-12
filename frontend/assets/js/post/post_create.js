@@ -15,7 +15,7 @@ async function getImageResponse(event) {
   if (result.status == 201) {
     alert(response["message"]);
     const path = response["path"];
-    const imageInput = document.querySelector(".image");
+    const imageInput = document.querySelector("#image");
     imageInput.setAttribute("value", path);
   } else {
     alert(JSON.stringify(response));
@@ -41,30 +41,16 @@ function loadPreviewImage(event) {
  */
 async function submitImage() {
   // 이미지 파일을 서버에 전송하기 위해 form 생성
-  const fileInput = document.querySelector(".imagefile");
+  const fileInput = document.querySelector("#imagefile");
   const formData = new FormData();
-
-  // header 설정
-  var myHeaders = new Headers();
-  myHeaders.append(
-    "Authorization",
-    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjY4OTMwMDA2LCJqdGkiOiIwOTU3NDAxNi04YmE2LTQyZjgtODhhZC0wYTkzMzBjNTY5N2UiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiXHViYmZjXHVjMjE4IiwibmJmIjoxNjY4OTMwMDA2LCJleHAiOjE2NjkwMTY0MDZ9.LnixDrHFAMusZhMSc2vIsfru4D61UAMrIx9ca3kTX3c"
-  );
-
   formData.append("image", fileInput.files[0]);
-
-  var requestOptions = {
+  const options = {
     method: "POST",
-    headers: myHeaders,
     body: formData,
   };
 
   // 이미지 업로드 API 요청
-  const result = await fetch(
-    "http://127.0.0.1:5000/upload/profile/image/",
-    requestOptions
-  );
-
+  const result = await fetch(POST_IMAGE_UPLOAD_API_URL, options);
   return result;
 }
 
@@ -72,7 +58,7 @@ async function submitImage() {
  * form 태그 안에 있는 내용을 JSON 으로 변환합니다.
  */
 function getFormJson() {
-  let form = document.querySelector("#profile-form");
+  let form = document.querySelector("#post-form");
   let data = new FormData(form);
   let serializedFormData = serialize(data);
   return JSON.stringify(serializedFormData);
@@ -84,7 +70,6 @@ function getFormJson() {
 function serialize(rawData) {
   let serializedData = {};
   for (let [key, value] of rawData) {
-    console.log(value);
     if (key == "imagefile") {
       continue;
     }
@@ -93,20 +78,16 @@ function serialize(rawData) {
     }
     serializedData[key] = value;
   }
-  console.log(serializedData);
   return serializedData;
 }
 
 /**
- * 정제된 데이터를 넣어 프로필 수정 요청을 보냅니다.
+ * 정제된 데이터를 넣어 게시물 작성 요청을 보냅니다.
  */
-async function submitProfileData() {
+async function submitPostData() {
   // 인증을 위한 header 설정
   var myHeaders = new Headers();
-  myHeaders.append(
-    "Authorization",
-    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjY4OTMwMDA2LCJqdGkiOiIwOTU3NDAxNi04YmE2LTQyZjgtODhhZC0wYTkzMzBjNTY5N2UiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiXHViYmZjXHVjMjE4IiwibmJmIjoxNjY4OTMwMDA2LCJleHAiOjE2NjkwMTY0MDZ9.LnixDrHFAMusZhMSc2vIsfru4D61UAMrIx9ca3kTX3c"
-  );
+  myHeaders.append("Authorization", `Bearer ${ACCESS_TOKEN}`);
   myHeaders.append("Content-Type", "application/json");
 
   // 보낼 데이터 설정
@@ -114,20 +95,16 @@ async function submitProfileData() {
 
   // 최종 옵션 설정
   var requestOptions = {
-    method: "PUT",
+    method: "POST",
     headers: myHeaders,
     body: raw,
     redirect: "follow",
   };
 
-  // 프로필 정보 수정 요청
-  const response = await fetch(
-    "http://127.0.0.1:5000/mypage/4/",
-    requestOptions
-  );
+  // 게시물 저장 요청
+  const response = await fetch(POST_LIST_API_URL, requestOptions);
   console.log(response.status);
-  if (response.status == 200) {
-    alert("프로필 사진 수정이 완료되었습니다.");
+  if (response.status == 201) {
     window.close();
   } else {
     alert(JSON.stringify(await response.json()));

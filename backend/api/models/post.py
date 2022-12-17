@@ -147,9 +147,13 @@ class PostModel(db.Model):
         현재 사용자가 팔로우한 모든 사람들의 리스트를 받아서,
         해당 사람들이 작성한 게시물을 id의 역순으로 정렬하여 리턴
         """
-        return cls.query.filter(
-            or_(cls.author == user for user in followed_users)
-        ).order_by(PostModel.id.desc())
+        from api.models.user import UserModel
+
+        if followed_users:
+            return cls.query.filter(
+                or_(cls.author == user for user in followed_users)
+            ).order_by(PostModel.id.desc())
+        return UserModel.query.filter(False)
 
     def __repr__(self):
         return f"<Post Object : {self.title}>"

@@ -27,28 +27,6 @@ async function loadProfileImage() {
 }
 
 /**
- * loacalStorage 에 존재하는 리프레시 토큰으로,
- * 새로운 액세스 토큰과 리프레시 토큰을 받아옵니다.
- * 받아온 새로운 토큰들을 localStorage에 저장합니다.
- */
-async function getNewJWT() {
-  let myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${REFRESH_TOKEN}`);
-  myHeaders.append("Content-Type", "application/json");
-  let requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-  };
-  const refreshResponse = await (
-    await fetch(REFRESH_TOKEN_API_URL, requestOptions)
-  ).json();
-  const access_token = refreshResponse["access_token"];
-  const refresh_token = refreshResponse["refresh_token"];
-  localStorage.setItem("access_token", access_token);
-  localStorage.setItem("refresh_token", refresh_token);
-}
-
-/**
  * Flask API 로부터 게시물 목록 데이터를 가져옵니다.
  * 만약, API 요청에 대한 응답 상태 코드가 401이라면,
  * 가지고 있는 리프레시 토큰으로 액세스 토큰을 재발급 요청한 후,
@@ -111,7 +89,9 @@ function getCompletedPost(
   feedImgValue, // 게시물의 피드 이미지
   contentValue, // 게시물의 내용
   authorNameValue, // 저자의 이름
-  authorImageValue // 저자의 프로필 사진
+  authorImageValue, // 저자의 프로필 사진
+  likerCountValue, // 게시물 좋아요 갯수
+  isLikeValue // 게시물 좋아요 여부
 ) {
   div = getCopyDiv();
   let authorUpImg = div.children[0].children[0].children[0].children[0];
@@ -121,6 +101,8 @@ function getCompletedPost(
   let title = div.children[2].children[4];
   let content = div.children[2].children[5];
   let postTime = div.children[2].children[6];
+  let likerCount = div.children[2].children[1];
+  let isLike = div.children[2].children[0].children[0].children[0];
 
   div.id = idValue;
   title.innerText = titleValue;
@@ -129,6 +111,14 @@ function getCompletedPost(
   authorUpName.innerText = authorNameValue;
   authorUpImg.src = authorImageValue;
   authorDownName.innerText = authorNameValue;
+  likerCount.innerText = `${likerCountValue} Likes`;
+  if (isLikeValue == false) {
+    isLike.classList.add("fa-regular");
+    isLike.classList.add("fa-heart");
+  } else {
+    isLike.classList.add("fa-solid");
+    isLike.classList.add("fa-heart");
+  }
 
   return div;
 }
@@ -154,6 +144,10 @@ function loadMorePosts(page) {
       const authorName = result[i]["author"]["username"];
       // 저자의 프로필 사진
       const authorImage = STATIC_FILES_API_URL + result[i]["author"]["image"];
+      // 게시물 좋아요 개수
+      const likerCount = result[i]["liker_count"];
+      // 게시물 좋아요 여부
+      const isLike = result[i]["is_like"];
 
       postDiv.append(
         getCompletedPost(
@@ -162,7 +156,9 @@ function loadMorePosts(page) {
           (feedImgValue = image),
           (contentValue = content),
           (authorNameValue = authorName),
-          (authorImageValue = authorImage)
+          (authorImageValue = authorImage),
+          (likerCountValue = likerCount),
+          (isLikeValue = isLike)
         )
       );
     }
@@ -215,6 +211,45 @@ function executeInfiniteScroll() {
     pageCount++;
   });
   intersectionObserver.observe(document.querySelector(".bottom"));
+}
+
+function toggleLikeButton(likeButton) {
+  let postId = likeButton.parentElement.parentElement.parentElement.id;
+  let likeElement = likeButton.parentElement.parentElement.children[1];
+  let likeValue = parseInt(likeElement.innerText.replace(/[^0-9]/g, ""));
+  if ($(likeButton).children().first().attr("class") == "fa-solid fa-heart") {
+    // 좋아요 취소 요청을 보냄
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${ACCESS_TOKEN}`);
+    myHeaders.append("Content-Type", "application/json");
+    var requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    fetch(`${POST_LIST_API_URL}${postId}/likes/`, requestOptions)
+      .then((response) => response.text())
+      .catch((error) => console.log("error", error));
+    likeValue--;
+    likeElement.innerText = `${likeValue} Likes`;
+    $(likeButton).html($("<i/>", { class: "fa-regular fa-heart" }));
+  } else {
+    // 좋아요 요청을 보냄
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${ACCESS_TOKEN}`);
+    myHeaders.append("Content-Type", "application/json");
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    fetch(`${POST_LIST_API_URL}${postId}/likes/`, requestOptions)
+      .then((response) => response.text())
+      .catch((error) => console.log("error", error));
+    likeValue++;
+    likeElement.innerText = `${likeValue} Likes`;
+    $(likeButton).html($("<i/>", { class: "fa-solid fa-heart" }));
+  }
 }
 
 function main() {

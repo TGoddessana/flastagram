@@ -1,4 +1,57 @@
 /**
+ * 회원정보 조회 API로부터 현재 로그인한 유저의 정보를 가져옵니다.
+ */
+async function getProfileDatafromAPI() {
+  userId = await decodeJWT(ACCESS_TOKEN)["user_id"];
+  try {
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${ACCESS_TOKEN}`);
+    myHeaders.append("Content-Type", "application/json");
+    let requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+    };
+    let rawResult = await fetch(MYPAGE_API_URL + userId + "/", requestOptions);
+    // 만약 액세스 토큰이 만료되었다면, 새로운 액세스 토큰을 받아옵니다.
+    if (rawResult.status == 401) {
+      getNewJWT();
+    }
+    rawResult = await fetch(MYPAGE_API_URL + userId + "/", requestOptions);
+
+    // 만약 리프레시 토큰도 만료되었다면, 로그인 페이지로 리다이렉트 처리합니다.
+    if (rawResult.status == 401) {
+      window.location.href = LOGIN_FRONTEND_URL;
+    }
+    const result = rawResult.json();
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+/**
+ * API 로부터 가져온 정보로 팝업창의 프로필 정보를 채웁니다.
+ */
+async function loadProfileInformation() {
+  const userInformationFromAPI = await getProfileDatafromAPI();
+  let imageDiv = document.querySelector("#preview-image");
+  imageDiv.style.backgroundImage = `url(${
+    STATIC_FILES_API_URL + userInformationFromAPI["image"]
+  })`;
+  imageDiv.style.backgroundSize = "100% 100%";
+
+  email = document.querySelector("#email-input");
+  email.value = userInformationFromAPI["email"];
+  username = document.querySelector("#username-input");
+  username.value = userInformationFromAPI["username"];
+  createdAt = document.querySelector("#created-at");
+  createdAt.innerText = userInformationFromAPI["created_at"];
+}
+
+loadProfileInformation();
+
+/**
  * 사용자가 이미지 선택을 완료하면,
  * 1. 업로드한 이미지를 띄워주고
  * 2. 서버에 이미지를 업로드합니다.

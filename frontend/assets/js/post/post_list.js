@@ -35,37 +35,62 @@ async function loadProfileImage() {
  * 로그인 페이지로 리다이렉트 처리합니다.
  */
 async function getPostListDatafromAPI(page = 1) {
-  try {
-    let myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${ACCESS_TOKEN}`);
-    myHeaders.append("Content-Type", "application/json");
-
-    let requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-    };
-
-    let rawResult = await fetch(
-      POST_LIST_API_URL + "?page=" + page,
-      requestOptions
-    );
-    // 만약 액세스 토큰이 만료되었다면, 새로운 액세스 토큰을 받아옵니다.
-    if (rawResult.status == 401) {
-      getNewJWT();
+  let myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${ACCESS_TOKEN}`);
+  myHeaders.append("Content-Type", "application/json");
+  let requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+  };
+  if (window.location.search.split("=")[1]) {
+    const query = window.location.search.split("=")[1];
+    console.log(query);
+    try {
+      let rawResult = await fetch(
+        POST_LIST_API_URL + "?search=" + query + "&page=" + page,
+        requestOptions
+      );
+      // 만약 액세스 토큰이 만료되었다면, 새로운 액세스 토큰을 받아옵니다.
+      if (rawResult.status == 401) {
+        getNewJWT();
+      }
+      rawResult = await fetch(
+        POST_LIST_API_URL + "?search=" + query + "&page=" + page,
+        requestOptions
+      );
+      // 만약 리프레시 토큰도 만료되었다면, 로그인 페이지로 리다이렉트 처리합니다.
+      if (rawResult.status == 401) {
+        window.location.href = LOGIN_FRONTEND_URL;
+      }
+      const result = rawResult.json();
+      return result;
+    } catch (error) {
+      console.log(error);
     }
-    rawResult = await fetch(
-      POST_LIST_API_URL + "?page=" + page,
-      requestOptions
-    );
-
-    // 만약 리프레시 토큰도 만료되었다면, 로그인 페이지로 리다이렉트 처리합니다.
-    if (rawResult.status == 401) {
-      window.location.href = LOGIN_FRONTEND_URL;
+  } else {
+    // 그렇지 않다면, 기본적인 게시물을 보여줌
+    try {
+      let rawResult = await fetch(
+        POST_LIST_API_URL + "?page=" + page,
+        requestOptions
+      );
+      // 만약 액세스 토큰이 만료되었다면, 새로운 액세스 토큰을 받아옵니다.
+      if (rawResult.status == 401) {
+        getNewJWT();
+      }
+      rawResult = await fetch(
+        POST_LIST_API_URL + "?page=" + page,
+        requestOptions
+      );
+      // 만약 리프레시 토큰도 만료되었다면, 로그인 페이지로 리다이렉트 처리합니다.
+      if (rawResult.status == 401) {
+        window.location.href = LOGIN_FRONTEND_URL;
+      }
+      const result = rawResult.json();
+      return result;
+    } catch (error) {
+      console.log(error);
     }
-    const result = rawResult.json();
-    return result;
-  } catch (error) {
-    console.log(error);
   }
 }
 

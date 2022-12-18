@@ -24,6 +24,7 @@ from .resources.user import (
     RefreshToken,
     MyPage,
     Follow,
+    Recommend,
 )
 from .resources.image import PostImageUpload, ProfileImageUpload, Image
 from .resources.comment import CommentList, CommentDetail
@@ -89,6 +90,9 @@ def create_app():
 
     # 팔로우 API
     api.add_resource(Follow, "/users/<int:id>/followers/")
+
+    # 랜덤추천 API
+    api.add_resource(Recommend, "/users/recommend-followers/")
 
     # 게시물 API
     api.add_resource(PostList, "/posts/")

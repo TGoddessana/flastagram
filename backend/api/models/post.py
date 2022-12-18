@@ -142,18 +142,14 @@ class PostModel(db.Model):
         return posts
 
     @classmethod
-    def filter_by_followed(cls, followed_users):
+    def filter_by_followed(cls, followed_users, request_user):
         """
         현재 사용자가 팔로우한 모든 사람들의 리스트를 받아서,
         해당 사람들이 작성한 게시물을 id의 역순으로 정렬하여 리턴
         """
-        from api.models.user import UserModel
-
-        if followed_users:
-            return cls.query.filter(
-                or_(cls.author == user for user in followed_users)
-            ).order_by(PostModel.id.desc())
-        return UserModel.query.filter(False)
+        return cls.query.filter(
+            or_(cls.author == user for user in followed_users + [request_user])
+        ).order_by(PostModel.id.desc())
 
     def __repr__(self):
         return f"<Post Object : {self.title}>"

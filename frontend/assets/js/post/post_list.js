@@ -21,7 +21,6 @@ async function loadRecommend() {
   recommendElement = document.getElementsByClassName("recommend");
   let recommendData = await getRecommendData();
   for (let i = 0; i <= 1; i++) {
-    console.log(recommendElement[i].children[0].children[0].src);
     recommendElement[i].children[0].children[0].src =
       STATIC_FILES_API_URL + recommendData[i]["image"];
     recommendElement[i].children[1].children[0].innerText =

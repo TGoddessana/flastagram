@@ -2,7 +2,7 @@ from api.ma import ma, Method, String
 from api.models.post import PostModel
 from api.models.user import UserModel
 from api.schemas.user import AuthorSchema
-from marshmallow import fields
+from marshmallow import fields, post_dump
 
 
 class PostSchema(ma.SQLAlchemyAutoSchema):
@@ -16,6 +16,12 @@ class PostSchema(ma.SQLAlchemyAutoSchema):
     author = fields.Nested(AuthorSchema)
     liker_count = Method("get_liker_count")
     is_like = Method("get_is_like")
+
+    @post_dump
+    def set_default_image(self, data, **kwargs):
+        if data["image"] == "" or data["image"] == None:
+            data["image"] = "default/default_profile_img.png"
+        return data
 
     def get_liker_count(self, obj):
         return obj.get_liker_count()

@@ -13,4 +13,7 @@ frontend/assets/img
 .vscode
 node_modules/
 .eslintrc.js
-static/
+# static
+profile/
+post/
+*.jpg:Zone.Identifier

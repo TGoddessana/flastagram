@@ -28,7 +28,6 @@ async function loadRecommend() {
       recommendData[i]["username"];
   }
 }
-loadRecommend();
 
 /**
  * jwt 에서 얻은 유저의 id 로 프로필 사진을 얻어옵니다.
@@ -312,6 +311,7 @@ function toggleLikeButton(likeButton) {
 function main() {
   executeInfiniteScroll(); // 스크롤을 내릴 때마다 게시물을 로드 (무한스크롤)
   loadProfileImage(); // 네비게이션 바에 프로필 사진을 뿌려줍니다.
+  loadRecommend(); // 추천 정보를 그려줍니다.
 }
 
 main();

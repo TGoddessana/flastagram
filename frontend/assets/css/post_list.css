@@ -287,6 +287,11 @@ body {
   opacity: 0.5;
 }
 
+.action-btn:hover{
+  color:blue;
+  cursor: pointer;
+}
+
 .reaction-wrapper{
   width: 100%;
   height: 50px;

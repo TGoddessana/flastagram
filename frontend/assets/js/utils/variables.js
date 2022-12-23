@@ -16,6 +16,9 @@ const MYPAGE_API_URL = API_SERVER_BASE_URL + "/mypage/";
 const POST_IMAGE_UPLOAD_API_URL = API_SERVER_BASE_URL + "/upload/post/image/";
 const PROFILE_IMAGE_UPLOAD_API_URL =
   API_SERVER_BASE_URL + "/upload/profile/image/";
+const FOLLOW_API_URL = (id) => {
+  return API_SERVER_BASE_URL + `/users/${id}/followers/`;
+};
 
 // Frontend 서버 기본 URL
 const FRONTEND_SERVER_BASE_URL = "http://" + window.location.host;

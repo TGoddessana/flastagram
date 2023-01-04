@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://gdsanadev.com">
-    <img src="frontend/assets/img/logo.png" alt="Logo" height="120">
+    <img src="doc_images/logo.png" alt="Logo" height="120">
   </a>
 
   <h3 align="center">Flastagram - 인스타그램 클론코딩 with Flask</h3>
@@ -27,13 +27,7 @@
 
 <img src="doc_images/ex2.png" alt="preview">
 
-Flask 와 HTML / CSS / JS 를 사용해 인스타그램을 클론 코딩하였습니다.
-  
-- Backend 는 HTTP API 를 구현하였습니다.
-- JWT 인증을 적용하였습니다.
-- 전체 앱을 컨테이너화하여 Docker 기반의 Fly.io 에 배포하였습니다.
-- Github Action 으로 배포를 자동화하였습니다.
-- 
+### TODO : 설명 추가
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -44,7 +38,7 @@ Flask 와 HTML / CSS / JS 를 사용해 인스타그램을 클론 코딩하였�
 <img src="doc_images/cloud_architecture.png" alt="preview">
 
 ### Backend API Specifications
-#TODO!
+### TODO : API 문서 추가
 <!-- <img src="doc_images/ex2.png" alt="preview"> -->
 
 ### Database ERD

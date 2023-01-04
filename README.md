@@ -99,11 +99,11 @@ Project Link: https://github.com/TGoddessana/flastagram
 
 
 
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/tgoddessana/flastagram?style=for-the-badge
 [forks-url]: https://github.com/tgoddessana/flastagram/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/tgoddessana/flastagram.svg?style=for-the-badge
 [stars-url]: https://github.com/tgoddessana/flastagram/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/tgoddessana/flastagram.svg?style=for-the-badge
 [issues-url]: https://github.com/tgoddessana/flastagram/issues
 
 

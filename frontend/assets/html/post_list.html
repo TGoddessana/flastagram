@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/post_list.css" type="text/css" />
+    <link href="https://use.fontawesome.com/releases/v6.2.1/css/all.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <title>Flastagram</title>
+</head>
+
+<body>
+    <!-- navbar start -->
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="/flastagram/posts" class="brand-img">
+                <img src="/assets/img/logo.png" class="brand-img" alt="brand image">
+            </a>
+            <form class="search-box">
+                <input type="text" class="search-box" name="search" placeholder="search">
+            </form>
+            <div class="nav-items">
+                <i class="fa-solid fa-house icon"></i>
+                <i class="fa-solid fa-paper-plane icon"></i>
+                <a href="javascript:showPostCreateForm()" class="icon">
+                    <i class="fa-regular fa-square-plus"></i>
+                </a>
+                <i class="fa-regular fa-compass icon"></i>
+                <i class="fa-regular fa-heart icon"></i>
+                <a href="javascript:showProfile()">
+                    <img src="" class="user-profile icon" alt="">
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- navbar end -->
+
+    <section class="main">
+        <div class="wrapper">
+            <div class="left-col">
+                <!-- status start -->
+                <div class="status-wrapper">
+                    <div class="status-card">
+                        <div class="profile-pic">
+                            <img src="/assets/img/profile-ex.jpg" alt="pic">
+                        </div>
+                        <p class="username">goddessana</p>
+                    </div>
+                </div>
+                <!-- status end -->
+
+                <!-- single post -->
+                <div class="post-wrapper">
+                    <div class="post" style="display: none;">
+                        <div class="info">
+                            <div class="user">
+                                <div class="profile-pic">
+                                    <img src="/assets/img/add.PNG" alt="">
+                                </div>
+                                <p class="author-up"></p>
+                            </div>
+                            <img src="/assets/img/option.PNG" class="options" alt="">
+
+                        </div>
+                        <img src="" class="post-image" alt="">
+                        <div class="post-content">
+                            <div class="reaction-wrapper">
+                                <a class="heart icon" onclick="toggleLikeButton(this);" id="like-button">
+                                    <i class=""></i>
+                                </a>
+                                <a class="comment icon"><i class="fa-regular fa-comment"></i></a>
+                                <a class="send icon"><i class="fa-solid fa-paper-plane"></i></a>
+                                <a class="save icon"><i class="fa-regular fa-bookmark"></i></a>
+                            </div>
+                            <p class="likes"></p>
+                            <p class="description"></p>
+                            <span class="author-down"></span>-
+                            <span class="title"></span>
+                            <p class="content"></p>
+                            <p class="post-time"></p>
+                        </div>
+                        <div class="comment-wrapper">
+                            <img src="/assets/img/smile.PNG" class="icon" alt="pic">
+                            <input type="text" class="comment-box" placeholder="Add a comment!">
+                            <button class="comment-btn">post</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- single post -->
+                <div class="bottom"></div>
+
+            </div>
+
+
+            <div class="right-col">
+                <div class="profile-card">
+                    <div class="profile-pic">
+                        <img src="/assets/img/profile-ex.jpg" alt="">
+                    </div>
+                    <div>
+                        <p class="username">discus</p>
+                        <p class="sub-text">blue diamond.</p>
+                    </div>
+                    <button class="action-btn">switch</button>
+                </div>
+                <p class="suggestion-text">
+                    Suggestions for You
+                </p>
+                <div class="profile-card recommend">
+                    <div class="profile-pic">
+                        <img src="" alt="">
+                    </div>
+                    <div>
+                        <p class="username"></p>
+                        <p class="sub-text"></p>
+                    </div>
+                    <button class="action-btn" onclick="toggleFollowButton(this)">Follow</button>
+                </div>
+                <div class="profile-card recommend">
+                    <div class="profile-pic">
+                        <img src="" alt="">
+                    </div>
+                    <div>
+                        <p class="username"></p>
+                        <p class="sub-text"></p>
+                    </div>
+                    <button class="action-btn" onclick="toggleFollowButton(this)">Follow</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="/assets/js/utils/decode_jwt.js"></script>
+    <script src="/assets/js/utils/variables.js"></script>
+    <script src="/assets/js/utils/get_new_jwt.js"></script>
+    <script src="/assets/js/auth/handler.js"></script>
+    <script src="/assets/js/post/post_list.js"></script>
+
+
+
+</body>
+
+</html>

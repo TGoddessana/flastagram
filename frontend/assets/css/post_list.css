@@ -41,8 +41,7 @@ body {
 }
 
 .brand-img{
-  height: 100%;
-  margin-top: 5px; 
+  height: 100%; 
 }
 
 .search-box {
@@ -69,10 +68,13 @@ body {
 }
 
 .icon{
-  height:100%;
+  font-size:25px;
+  height: 100%;
   cursor: pointer;
   margin: 0 10px;
   display: inline-block;
+  text-decoration : none;
+  color: #000;
 }
 
 .user-profile{
@@ -232,7 +234,12 @@ body {
   margin-right: 10px;
 }
 
-.author {
+.author-up {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.author-down {
   font-weight: bold;
   margin-right: 10px;
 }
@@ -278,6 +285,11 @@ body {
   font-size: 16px;
   color: rgb(0,162, 255);
   opacity: 0.5;
+}
+
+.action-btn:hover{
+  color:blue;
+  cursor: pointer;
 }
 
 .reaction-wrapper{

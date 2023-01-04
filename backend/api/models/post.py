@@ -1,5 +1,22 @@
 from ..db import db
 from sqlalchemy.sql import func
+from sqlalchemy import or_
+
+post_to_liker = db.Table(
+    "post_liker",
+    db.Column(
+        "user_id",
+        db.Integer,
+        db.ForeignKey("User.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    db.Column(
+        "post_id",
+        db.Integer,
+        db.ForeignKey("Post.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+)
 
 
 class PostModel(db.Model):
@@ -12,6 +29,7 @@ class PostModel(db.Model):
     updated_at  : 게시물의 생성일자, 게시물이 수정될 때마다 업데이트
     author_id   : 게시물의 저자 id, 외래 키
     comment_set : 게시물에 달린 댓글들
+    image       : 게시물에 첨부된 이미지 파일의 주소
     """
 
     __tablename__ = "Post"
@@ -20,10 +38,57 @@ class PostModel(db.Model):
     title = db.Column(db.String(150))
     content = db.Column(db.String(500))
     created_at = db.Column(db.DateTime(timezone=True), default=func.now())
-    updated_at = db.Column(db.DateTime(timezone=True), default=func.now(), onupdate=func.now())
-    author_id = db.Column(db.Integer, db.ForeignKey("User.id", ondelete="CASCADE"), nullable=False)
-    author = db.relationship("UserModel", backref="post_author")
-    comment_set = db.relationship("CommentModel", backref="post", passive_deletes=True)
+    updated_at = db.Column(
+        db.DateTime(timezone=True), default=func.now(), onupdate=func.now()
+    )
+    author_id = db.Column(
+        db.Integer,
+        db.ForeignKey("User.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    author = db.relationship("UserModel", backref="post_set")
+    comment_set = db.relationship(
+        "CommentModel", backref="post", passive_deletes=True, lazy="dynamic"
+    )
+    image = db.Column(db.String(255))
+    liker = db.relationship(
+        "UserModel",
+        secondary=post_to_liker,
+        backref=db.backref("post_liker_set", lazy="dynamic"),
+        lazy="dynamic",
+    )
+
+    def do_like(self, user):
+        """
+        특정 게시물에 좋아요를 누름
+        """
+        if not self.is_like(user):
+            self.liker.append(user)
+            db.session.commit()
+            return self
+
+    def cancel_like(self, user):
+        """
+        특정 게시물에 좋아요를 취소함
+        """
+        if self.is_like(user):
+            self.liker.remove(user)
+            db.session.commit()
+            return self
+
+    def is_like(self, user):
+        """
+        특정 게시물에 좋아요를 눌렀는지에 대한 여부 반환
+        """
+        return (
+            self.liker.filter(post_to_liker.c.user_id == user.id).count() > 0
+        )
+
+    def get_liker_count(self):
+        """
+        특정 게시물의 좋아요 숫자를 반환
+        """
+        return self.liker.count()
 
     @classmethod
     def find_by_id(cls, id):
@@ -34,6 +99,9 @@ class PostModel(db.Model):
 
     @classmethod
     def find_all(cls):
+        """
+        모든 게시물을 찾음
+        """
         return cls.query.all()
 
     def save_to_db(self):
@@ -49,6 +117,39 @@ class PostModel(db.Model):
         """
         db.session.delete(self)
         db.session.commit()
+
+    def update_to_db(self, data):
+        """
+        데이터베이스에 존재하는 게시물을 수정
+        data = {
+                 "title":"example content",
+                 "content":"example content"
+                 }
+        형태의 딕셔너리가 들어올 것이라고 가정
+        """
+        for key, value in data.items():
+            setattr(self, key, value)
+        db.session.commit()
+
+    @classmethod
+    def filter_by_string(cls, string):
+        """
+        title, content 에 string이 포함되어있는 모든 게시물을 찾음
+        """
+        posts = cls.query.filter(
+            cls.content.ilike(string) | cls.title.ilike(string)
+        )
+        return posts
+
+    @classmethod
+    def filter_by_followed(cls, followed_users, request_user):
+        """
+        현재 사용자가 팔로우한 모든 사람들의 리스트를 받아서,
+        해당 사람들이 작성한 게시물을 id의 역순으로 정렬하여 리턴
+        """
+        return cls.query.filter(
+            or_(cls.author == user for user in followed_users + [request_user])
+        ).order_by(PostModel.id.desc())
 
     def __repr__(self):
         return f"<Post Object : {self.title}>"

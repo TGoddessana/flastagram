@@ -121,6 +121,9 @@ class UserLogin(MethodView):
         data = request.get_json()
         user = UserModel.find_by_email(data["email"])
 
+        if not user:
+            return {"Error": "사용자를 찾을 수 없습니다."}, 404
+
         additional_claims = {"user_id": user.id}
 
         if user and check_password_hash(user.password, data["password"]):

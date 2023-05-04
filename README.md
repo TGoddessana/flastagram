@@ -23,11 +23,12 @@
 <!-- ABOUT THE PROJECT -->
 ## About Flastagram
 
+Flask 웹 프레임워크로 간단한 HTTP API 서버를, Express.js 로 간단한 정적 서버를 구축하였습니다.
+
 <img src="doc_images/ex1.png" alt="preview">
 
 <img src="doc_images/ex2.png" alt="preview">
 
-### TODO : 설명 추가
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -38,7 +39,7 @@
 <img src="doc_images/cloud_architecture.png" alt="preview">
 
 ### Backend API Specifications
-### TODO : API 문서 추가
+
 <!-- <img src="doc_images/ex2.png" alt="preview"> -->
 
 ### Database ERD

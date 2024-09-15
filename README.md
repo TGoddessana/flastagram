@@ -5,7 +5,6 @@
 [![Issues][issues-shield]][issues-url]
 
 
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -74,6 +73,7 @@ Flask 웹 프레임워크로 간단한 HTTP API 서버를, Express.js 로 간단
 ## Contact
 
 TGoddessana - twicegoddessana1229@gmail.com
+              (Feel free to reach out to me)
 
 Project Link: https://github.com/TGoddessana/flastagram
 
